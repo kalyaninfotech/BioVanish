@@ -10,27 +10,19 @@ jobs:
         with:
           distribution: temurin
           java-version: '17'
-      - name: Build APK
+      - name: Unzip and Build APK
         run: |
-          set -x
           ls -la
-          echo "Unzipping..."
           unzip -o BioVanish-Android-Project.zip
+          echo "=== After unzip ==="
           ls -la
-          echo "Finding gradlew..."
-          find . -maxdepth 4 -name gradlew -type f
-          PROJECT_DIR=$(find . -maxdepth 4 -name gradlew -type f -exec dirname {} \; | head -n 1)
-          if [ -z "$PROJECT_DIR" ]; then
-            echo "gradlew not found!"
-            exit 1
-          fi
-          echo "Found project at $PROJECT_DIR"
+          PROJECT_DIR=$(find . -maxdepth 4 -name gradlew -type f | head -n 1 | xargs dirname)
+          echo "Project dir: $PROJECT_DIR"
           cd "$PROJECT_DIR"
           chmod +x gradlew
           ./gradlew assembleDebug --stacktrace
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: app-debug-apk
+          name: BioVanish-APK
           path: "**/app/build/outputs/apk/debug/*.apk"
-          if-no-files-found: error
