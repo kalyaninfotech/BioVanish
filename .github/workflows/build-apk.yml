@@ -16,9 +16,9 @@ jobs:
         run: |
           cd BioVanish-Android-Project
           chmod +x gradlew
-         ./gradlew assembleRelease
+         ./gradlew assembleDebug
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: app-release-apk
-          path: BioVanish-Android-Project/app/build/outputs/apk/release/*.apk
+          path: BioVanish-Android-Project/app/build/outputs/apk/debug/*.apk
