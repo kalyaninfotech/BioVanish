@@ -5,20 +5,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Unzip project
-        run: unzip -o BioVanish-Android-Project.zip
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '17'
-      - name: Build Debug APK
+      - name: Unzip and Build
         run: |
-          cd BioVanish-Android-Project
+          ls -la
+          unzip -o BioVanish-Android-Project.zip
+          echo "After unzip:"
+          ls -la
+          find . -name "gradlew" -type f
+          PROJECT_DIR=$(find . -name "gradlew" -exec dirname {} \; | head -n 1)
+          echo "Project dir is $PROJECT_DIR"
+          cd "$PROJECT_DIR"
           chmod +x gradlew
           ./gradlew assembleDebug
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: app-debug
-          path: BioVanish-Android-Project/app/build/outputs/apk/debug/app-debug.apk
+          path: "**/app/build/outputs/apk/debug/*.apk"
